@@ -1,0 +1,39 @@
+# Citizen Platform - Requirements Summary
+
+## ⚙️ Backend (Spring Boot 3.2.4)
+- **Java Version**: 17+
+- **Build Tool**: Maven 3.8+
+- **Dependencies**:
+  - `spring-boot-starter-web`: API REST MVC
+  - `spring-boot-starter-data-jpa`: Persistance Hibernate
+  - `spring-boot-starter-security`: Authentification & JWT
+  - `spring-boot-starter-validation`: Validation des données
+  - `mysql-connector-j`: Driver MySQL
+  - `lombok`: Réduction du code boilerplate
+  - `jjwt`: JWT token generation/validation
+  - `spring-boot-starter-test`: Tests unitaires et d'intégration
+
+## 🎨 Frontend (Tailwind CSS)
+- **Framework CSS**: Tailwind CSS (via CDN)
+- **Design System**: Glassmorphism (transparence, flou d'arrière-plan, fond bleu sombre)
+- **Icons**: SVG inline
+- **JavaScript**: ES6+ (vanilla, pas de framework)
+- **Browser Support**: Chrome, Firefox, Safari, Edge (versions récentes)
+- **Animations**: CSS transitions et transforms sur boutons, navigation, hover
+
+## 🗄️ Base de données
+- **Type**: MySQL 8.0+
+- **Database Name**: `cityzen`
+- **User**: `root`
+- **Password**: (vide)
+- **Port**: 3306
+- **Existing tables**: users, roles, user_roles, initiatives, categories, geographic_zones, comments, votes, admins
+
+## 🚀 Fonctionnalités principales
+- Authentification JWT avec rôles (CITOYEN, MODERATEUR, ADMIN)
+- CRUD complet pour les initiatives
+- Système de vote (UP/DOWN) avec limitation un vote par utilisateur
+- Système de commentaires avec modération
+- Tableau de bord avec statistiques
+- Présentation réseau social (post, comment, share, soutien)
+- Interface Glassmorphism avec animations fluides
