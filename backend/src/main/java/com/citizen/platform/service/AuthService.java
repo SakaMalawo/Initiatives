@@ -6,7 +6,6 @@ import com.citizen.platform.entity.User;
 import com.citizen.platform.repository.RoleRepository;
 import com.citizen.platform.repository.UserRepository;
 import com.citizen.platform.security.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -23,39 +21,49 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email déjà utilisé");
         }
 
-        User user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .phoneNumber(request.getPhone())
-                .city(request.getCity())
-                .postalCode(request.getPostalCode())
-                .isActive(true)
-                .build();
+        User user = new User();
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhoneNumber(request.getPhone());
+        user.setCity(request.getCity());
+        user.setPostalCode(request.getPostalCode());
+        user.setIsActive(true);
 
         Role citizenRole = roleRepository.findByName("CITOYEN")
-                .orElseThrow(() -> new RuntimeException("Rôle CITOYEN non trouvé"));
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName("CITOYEN");
+                    return roleRepository.save(newRole);
+                });
         user.setRoles(Set.of(citizenRole));
 
         User savedUser = userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(savedUser);
 
-        return AuthResponse.builder()
-                .id(savedUser.getId())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .email(savedUser.getEmail())
-                .roles(savedUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                .token(token)
-                .build();
+        AuthResponse response = new AuthResponse();
+        response.setId(savedUser.getId());
+        response.setFirstName(savedUser.getFirstName());
+        response.setLastName(savedUser.getLastName());
+        response.setEmail(savedUser.getEmail());
+        response.setRoles(savedUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        response.setToken(token);
+        return response;
     }
 
     @Transactional
@@ -73,32 +81,32 @@ public class AuthService {
 
         String token = jwtTokenProvider.generateToken(user);
 
-        return AuthResponse.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                .token(token)
-                .build();
+        AuthResponse response = new AuthResponse();
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
+        response.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        response.setToken(token);
+        return response;
     }
 
     public UserProfile getProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        return UserProfile.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .city(user.getCity())
-                .postalCode(user.getPostalCode())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                .active(user.getIsActive())
-                .createdAt(user.getCreatedAt())
-                .build();
+        UserProfile profile = new UserProfile();
+        profile.setId(user.getId());
+        profile.setFirstName(user.getFirstName());
+        profile.setLastName(user.getLastName());
+        profile.setEmail(user.getEmail());
+        profile.setPhoneNumber(user.getPhoneNumber());
+        profile.setCity(user.getCity());
+        profile.setPostalCode(user.getPostalCode());
+        profile.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        profile.setActive(user.getIsActive());
+        profile.setCreatedAt(user.getCreatedAt());
+        return profile;
     }
 
     @Transactional

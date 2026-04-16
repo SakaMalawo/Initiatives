@@ -5,7 +5,6 @@ import com.citizen.platform.dto.InitiativeResponse;
 import com.citizen.platform.security.JwtAuthFilter;
 import com.citizen.platform.service.InitiativeService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/initiatives")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class InitiativeController {
 
     private final InitiativeService initiativeService;
+
+    public InitiativeController(InitiativeService initiativeService) {
+        this.initiativeService = initiativeService;
+    }
 
     private Long getCurrentUserId() {
         return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

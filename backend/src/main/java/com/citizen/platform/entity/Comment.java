@@ -1,15 +1,10 @@
 package com.citizen.platform.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Comment {
 
     @Id
@@ -49,6 +44,31 @@ public class Comment {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public Comment() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public User getAuthor() { return author; }
+    public void setAuthor(User author) { this.author = author; }
+    public Initiative getInitiative() { return initiative; }
+    public void setInitiative(Initiative initiative) { this.initiative = initiative; }
+    public Comment getParentComment() { return parentComment; }
+    public void setParentComment(Comment parentComment) { this.parentComment = parentComment; }
+    public Boolean getIsModerated() { return isModerated; }
+    public void setIsModerated(Boolean isModerated) { this.isModerated = isModerated; }
+    public User getModeratedBy() { return moderatedBy; }
+    public void setModeratedBy(User moderatedBy) { this.moderatedBy = moderatedBy; }
+    public LocalDateTime getModeratedAt() { return moderatedAt; }
+    public void setModeratedAt(LocalDateTime moderatedAt) { this.moderatedAt = moderatedAt; }
+    public String getModerationReason() { return moderationReason; }
+    public void setModerationReason(String moderationReason) { this.moderationReason = moderationReason; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     @PrePersist
     protected void onCreate() {

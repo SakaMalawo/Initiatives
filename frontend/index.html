@@ -40,26 +40,44 @@
         .nav-link:hover::after {
             width: 100%;
         }
+        .nav-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+        body {
+            padding-top: 100px;
+        }
     </style>
 </head>
 <body class="font-sans antialiased">
     <!-- Navigation -->
-    <nav class="glass m-6 p-5 flex justify-between items-center sticky top-6 z-50">
-        <div class="flex items-center space-x-3">
+    <nav class="glass nav-fixed p-5 flex justify-between items-center">
+        <a href="index.html" class="flex items-center space-x-3">
             <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </div>
             <span class="text-2xl font-extrabold tracking-tight text-white">Citizen<span class="text-blue-400">Platform</span></span>
-        </div>
+        </a>
         <div class="hidden md:flex items-center space-x-8">
-            <a href="#" class="nav-link text-gray-300 hover:text-white font-medium">Initiatives</a>
-            <a href="#" class="nav-link text-gray-300 hover:text-white font-medium">Statistiques</a>
-            <a href="#" class="nav-link text-gray-300 hover:text-white font-medium">À propos</a>
+            <a href="initiatives.html" class="nav-link text-gray-300 hover:text-white font-medium">Initiatives</a>
+            <a href="dashboard.html" class="nav-link text-gray-300 hover:text-white font-medium">Statistiques</a>
+            <a href="index.html#about" class="nav-link text-gray-300 hover:text-white font-medium">À propos</a>
             <div class="h-6 w-px bg-white/10"></div>
-            <a href="#" class="text-gray-300 hover:text-white font-medium">Connexion</a>
-            <a href="#" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold btn-animate shadow-lg shadow-blue-600/20">
-                S'inscrire
-            </a>
+            <!-- Non connecté -->
+            <div id="authButtons" class="flex items-center space-x-4">
+                <a href="login.html" class="text-gray-300 hover:text-white font-medium">Connexion</a>
+                <a href="register.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold btn-animate shadow-lg shadow-blue-600/20">
+                    S'inscrire
+                </a>
+            </div>
+            <!-- Connecté -->
+            <div id="userMenu" class="hidden flex items-center space-x-4">
+                <a href="profile.html" class="nav-link text-gray-300 hover:text-white font-medium">Mon profil</a>
+                <button onclick="logout()" class="text-red-400 hover:text-red-300 font-medium">Déconnexion</button>
+            </div>
         </div>
     </nav>
 
@@ -159,5 +177,8 @@
     <footer class="text-center py-12 text-gray-500 border-t border-white/5 mt-20">
         <p>&copy; 2026 Citizen Platform. Développé pour une démocratie locale plus forte.</p>
     </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

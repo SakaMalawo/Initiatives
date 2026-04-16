@@ -85,6 +85,7 @@ Thumbs.db
 application-local.properties
 application-dev.properties
 application-prod.properties
+application.properties
 
 # Database
 *.db

@@ -3,17 +3,21 @@ package com.citizen.platform.service;
 import com.citizen.platform.dto.VoteRequest;
 import com.citizen.platform.entity.*;
 import com.citizen.platform.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class VoteService {
 
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final InitiativeRepository initiativeRepository;
+
+    public VoteService(VoteRepository voteRepository, UserRepository userRepository, InitiativeRepository initiativeRepository) {
+        this.voteRepository = voteRepository;
+        this.userRepository = userRepository;
+        this.initiativeRepository = initiativeRepository;
+    }
 
     @Transactional
     public void vote(Long userId, VoteRequest request) {
@@ -30,11 +34,10 @@ public class VoteService {
                 ? Vote.VoteType.valueOf(request.getType())
                 : Vote.VoteType.UP;
 
-        Vote vote = Vote.builder()
-                .user(user)
-                .initiative(initiative)
-                .type(type)
-                .build();
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setInitiative(initiative);
+        vote.setType(type);
 
         voteRepository.save(vote);
 

@@ -1,3 +1,8 @@
+// Check authentication
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
 async function loadDashboard() {
     try {
         const stats = await api.get('/dashboard/stats');

@@ -1,17 +1,12 @@
 package com.citizen.platform.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "votes", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "initiative_id"})
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Vote {
 
     public enum VoteType {
@@ -32,11 +27,23 @@ public class Vote {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "vote_type", nullable = false, length = 20)
-    @Builder.Default
     private VoteType type = VoteType.UP;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    public Vote() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Initiative getInitiative() { return initiative; }
+    public void setInitiative(Initiative initiative) { this.initiative = initiative; }
+    public VoteType getType() { return type; }
+    public void setType(VoteType type) { this.type = type; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     @PrePersist
     protected void onCreate() {

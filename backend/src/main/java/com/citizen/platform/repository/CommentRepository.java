@@ -9,6 +9,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByInitiativeIdOrderByCreatedAtDesc(Long initiativeId);
     List<Comment> findByAuthorId(Long authorId);
-    List<Comment> findByModeratedFalse();
+    List<Comment> findByIsModeratedFalse();
     long countByInitiativeId(Long initiativeId);
 }

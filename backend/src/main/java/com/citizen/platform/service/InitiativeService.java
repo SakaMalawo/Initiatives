@@ -3,7 +3,6 @@ package com.citizen.platform.service;
 import com.citizen.platform.dto.*;
 import com.citizen.platform.entity.*;
 import com.citizen.platform.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class InitiativeService {
 
     private final InitiativeRepository initiativeRepository;
@@ -21,6 +19,17 @@ public class InitiativeService {
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
 
+    public InitiativeService(InitiativeRepository initiativeRepository, UserRepository userRepository,
+                             CategoryRepository categoryRepository, ZoneRepository zoneRepository,
+                             VoteRepository voteRepository, CommentRepository commentRepository) {
+        this.initiativeRepository = initiativeRepository;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.zoneRepository = zoneRepository;
+        this.voteRepository = voteRepository;
+        this.commentRepository = commentRepository;
+    }
+
     @Transactional
     public InitiativeResponse create(Long authorId, InitiativeRequest request) {
         User author = userRepository.findById(authorId)
@@ -29,12 +38,11 @@ public class InitiativeService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
 
-        Initiative initiative = Initiative.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .author(author)
-                .category(category)
-                .build();
+        Initiative initiative = new Initiative();
+        initiative.setTitle(request.getTitle());
+        initiative.setDescription(request.getDescription());
+        initiative.setAuthor(author);
+        initiative.setCategory(category);
 
         if (request.getZoneId() != null) {
             zoneRepository.findById(request.getZoneId())
@@ -169,29 +177,29 @@ public class InitiativeService {
             }
         }
 
-        return InitiativeResponse.builder()
-                .id(i.getId())
-                .title(i.getTitle())
-                .description(i.getDescription())
-                .status(i.getStatus().name())
-                .priority(i.getPriority().name())
-                .imageUrl(null)
-                .authorId(i.getAuthor().getId())
-                .authorName(i.getAuthor().getFirstName() + " " + i.getAuthor().getLastName())
-                .authorAvatar(null)
-                .categoryId(i.getCategory() != null ? i.getCategory().getId() : null)
-                .categoryName(i.getCategory() != null ? i.getCategory().getName() : null)
-                .categoryColor(null)
-                .zoneId(i.getZone() != null ? i.getZone().getId() : null)
-                .zoneName(i.getZone() != null ? i.getZone().getName() : null)
-                .voteCount(voteCount)
-                .soutienCount(upCount)
-                .oppositionCount(downCount)
-                .commentCount(commentCount)
-                .hasVoted(hasVoted)
-                .userVoteType(userVoteType)
-                .createdAt(i.getCreatedAt())
-                .updatedAt(i.getUpdatedAt())
-                .build();
+        InitiativeResponse response = new InitiativeResponse();
+        response.setId(i.getId());
+        response.setTitle(i.getTitle());
+        response.setDescription(i.getDescription());
+        response.setStatus(i.getStatus().name());
+        response.setPriority(i.getPriority().name());
+        response.setImageUrl(null);
+        response.setAuthorId(i.getAuthor().getId());
+        response.setAuthorName(i.getAuthor().getFirstName() + " " + i.getAuthor().getLastName());
+        response.setAuthorAvatar(null);
+        response.setCategoryId(i.getCategory() != null ? i.getCategory().getId() : null);
+        response.setCategoryName(i.getCategory() != null ? i.getCategory().getName() : null);
+        response.setCategoryColor(null);
+        response.setZoneId(i.getZone() != null ? i.getZone().getId() : null);
+        response.setZoneName(i.getZone() != null ? i.getZone().getName() : null);
+        response.setVoteCount(voteCount);
+        response.setSoutienCount(upCount);
+        response.setOppositionCount(downCount);
+        response.setCommentCount(commentCount);
+        response.setHasVoted(hasVoted);
+        response.setUserVoteType(userVoteType);
+        response.setCreatedAt(i.getCreatedAt());
+        response.setUpdatedAt(i.getUpdatedAt());
+        return response;
     }
 }

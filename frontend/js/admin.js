@@ -1,3 +1,8 @@
+// Check authentication
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
 function showTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
     document.querySelectorAll('.tab-btn').forEach(btn => {

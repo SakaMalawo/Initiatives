@@ -4,7 +4,6 @@ import com.citizen.platform.dto.DashboardStats;
 import com.citizen.platform.dto.InitiativeResponse;
 import com.citizen.platform.entity.Initiative;
 import com.citizen.platform.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class DashboardService {
 
     private final InitiativeRepository initiativeRepository;
@@ -23,6 +21,17 @@ public class DashboardService {
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final InitiativeService initiativeService;
+
+    public DashboardService(InitiativeRepository initiativeRepository, UserRepository userRepository,
+                            VoteRepository voteRepository, CommentRepository commentRepository,
+                            CategoryRepository categoryRepository, InitiativeService initiativeService) {
+        this.initiativeRepository = initiativeRepository;
+        this.userRepository = userRepository;
+        this.voteRepository = voteRepository;
+        this.commentRepository = commentRepository;
+        this.categoryRepository = categoryRepository;
+        this.initiativeService = initiativeService;
+    }
 
     @Transactional(readOnly = true)
     public DashboardStats getStats(Long currentUserId) {
@@ -39,14 +48,14 @@ public class DashboardService {
 
         List<InitiativeResponse> topInitiatives = initiativeService.findPopular(currentUserId);
 
-        return DashboardStats.builder()
-                .totalInitiatives(initiativeRepository.count())
-                .totalUsers(userRepository.count())
-                .totalVotes(voteRepository.count())
-                .totalComments(commentRepository.count())
-                .initiativesByStatus(byStatus)
-                .initiativesByCategory(byCategory)
-                .topInitiatives(topInitiatives)
-                .build();
+        DashboardStats stats = new DashboardStats();
+        stats.setTotalInitiatives(initiativeRepository.count());
+        stats.setTotalUsers(userRepository.count());
+        stats.setTotalVotes(voteRepository.count());
+        stats.setTotalComments(commentRepository.count());
+        stats.setInitiativesByStatus(byStatus);
+        stats.setInitiativesByCategory(byCategory);
+        stats.setTopInitiatives(topInitiatives);
+        return stats;
     }
 }

@@ -1,7 +1,7 @@
 # Citizen Platform - Requirements Summary
 
 ## ⚙️ Backend (Spring Boot 3.2.4)
-- **Java Version**: 17+
+- **Java Version**: 24+
 - **Build Tool**: Maven 3.8+
 - **Dependencies**:
   - `spring-boot-starter-web`: API REST MVC
@@ -9,7 +9,6 @@
   - `spring-boot-starter-security`: Authentification & JWT
   - `spring-boot-starter-validation`: Validation des données
   - `mysql-connector-j`: Driver MySQL
-  - `lombok`: Réduction du code boilerplate
   - `jjwt`: JWT token generation/validation
   - `spring-boot-starter-test`: Tests unitaires et d'intégration
 

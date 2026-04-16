@@ -1,3 +1,8 @@
+// Check authentication
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
 async function loadCategories() {
     try {
         const categories = await api.get('/categories');

@@ -3,18 +3,20 @@ package com.citizen.platform.controller;
 import com.citizen.platform.dto.VoteRequest;
 import com.citizen.platform.service.VoteService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/votes")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class VoteController {
 
     private final VoteService voteService;
+
+    public VoteController(VoteService voteService) {
+        this.voteService = voteService;
+    }
 
     private Long getCurrentUserId() {
         return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
