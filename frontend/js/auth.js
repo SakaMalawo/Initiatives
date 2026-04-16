@@ -33,14 +33,17 @@ async function login(email, password) {
 }
 
 async function register(data) {
+    console.log('Register function called with:', data);
     try {
         const response = await api.post('/auth/register', data);
+        console.log('Register response:', response);
         api.setToken(response.token);
         currentUser = response;
         localStorage.setItem('user', JSON.stringify(response));
         window.location.href = 'initiatives.html';
     } catch (error) {
-        alert('Erreur lors de l\'inscription');
+        console.error('Register error:', error);
+        alert('Erreur lors de l\'inscription: ' + (error.message || 'Unknown error'));
     }
 }
 
@@ -63,13 +66,16 @@ function updateAuthUI() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded - auth.js initialized');
     checkAuth();
     updateAuthUI();
 
     // Register form handler
     const registerForm = document.getElementById('registerForm');
+    console.log('Register form found:', registerForm);
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
+            console.log('Form submit triggered');
             e.preventDefault();
             const data = {
                 firstName: document.getElementById('firstName').value,
@@ -80,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 city: document.getElementById('city').value,
                 postalCode: document.getElementById('postalCode').value
             };
+            console.log('Register data:', data);
             await register(data);
         });
     }

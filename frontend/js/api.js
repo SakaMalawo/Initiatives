@@ -35,12 +35,18 @@ class ApiClient {
     }
 
     async post(endpoint, data) {
+        console.log('API POST:', endpoint, data);
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: this.getHeaders(),
             body: JSON.stringify(data)
         });
-        if (!response.ok) throw new Error('API Error');
+        console.log('API response status:', response.status);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API error response:', errorText);
+            throw new Error(`API Error ${response.status}: ${errorText}`);
+        }
         return response.json();
     }
 
